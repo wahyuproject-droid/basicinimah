@@ -41,13 +41,13 @@
       <div class="logo">wM</div>
       <div>
         <h1>whyuMATEMATIKA</h1>
-        <p class="lead">Latihan aritmatika tingkat sulit — 20 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
+        <p class="lead">Latihan aritmatika tingkat sulit — 30 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
       </div>
     </header>
 
     <div class="card" id="app">
       <div class="meta">
-        <div class="chip">Soal: <span id="qIndex">1</span>/20</div>
+        <div class="chip">Soal: <span id="qIndex">1</span>/30</div>
         <div class="chip">Benar: <span id="correct">0</span></div>
         <div class="chip">Salah: <span id="wrong">0</span></div>
         <div style="flex:1"></div>
@@ -58,7 +58,7 @@
 
       <div class="question" style="margin-top:12px">
         <div>
-          <div class="q-text" id="qText">10 × 10 = ?</div>
+          <div class="q-text" id="qText">10 + 10 = ?</div>
           <div class="options" id="options"></div>
         </div>
         <div style="text-align:right">
@@ -99,7 +99,7 @@
   </div>
 
   <script>
-    const TOTAL = 20;
+    const TOTAL = 30;
     let questions = [];
     let current = 0;
     let selected = Array(TOTAL).fill(null);
@@ -108,16 +108,15 @@
 
     function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 
-    // Soal aritmatika sulit: bisa perkalian, penjumlahan, pengurangan, pembagian
+    // Soal aritmatika sulit: hanya penjumlahan, pengurangan, pembagian
     function makeQuestion(){
-      const ops = ['+','-','×','÷'];
+      const ops = ['+','-','÷'];
       const op = ops[randInt(0,ops.length-1)];
       let a = randInt(20,100);
       let b = randInt(2,50);
       let answer;
       if(op==='+') answer = a+b;
       else if(op==='-') answer = a-b;
-      else if(op==='×') answer = a*b;
       else if(op==='÷'){ answer = Math.floor(a/b); a=answer*b; }
 
       const opts = new Set([answer]);
