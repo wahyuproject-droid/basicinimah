@@ -1,151 +1,205 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Pribadi WAHYU PROJECT</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>whyuMATEMATIKA - Latihan Perkalian</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8}
+    *{box-sizing:border-box;font-family:Inter, system-ui, Arial, sans-serif}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071029 0%, #071a2b 60%), radial-gradient(800px 400px at 10% 10%, rgba(6,182,212,0.06), transparent);color:#e6eef8}
+    .wrap{max-width:920px;margin:40px auto;padding:28px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    header{display:flex;align-items:center;gap:16px}
+    .logo{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),#7c3aed);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#022733}
+    h1{margin:0;font-size:28px}
+    p.lead{margin:6px 0 18px;color:var(--muted)}
 
-        body {
-            background: #000;
-            color: white;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    .card{background:var(--card);padding:18px;border-radius:12px;margin-top:12px}
+    .meta{display:flex;gap:12px;align-items:center}
+    .chip{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;font-size:13px;color:var(--muted)}
 
-        /* Bar Atas */
-        .topbar {
-            background: #111;
-            padding: 10px 0;
-            overflow: hidden;
-            position: relative;
-        }
+    .progress{height:12px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#7c3aed);width:0%;transition:width .35s ease}
 
-        .topbar span {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 12s linear infinite;
-            font-weight: bold;
-            font-size: 18px;
-            color: red;
-        }
+    .question{display:grid;grid-template-columns:1fr 200px;gap:18px;align-items:center}
+    .q-text{font-size:20px;font-weight:600}
 
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+    .options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .opt{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid transparent}
+    .opt:hover{transform:translateY(-3px)}
+    .opt.selected{outline:2px solid rgba(6,182,212,0.12);box-shadow:0 6px 18px rgba(6,182,212,0.06);}
+    .opt.correct{background:linear-gradient(90deg,#0ea5a0 0%, #34d399 100%);color:#022733;border-color:rgba(0,0,0,0.12)}
+    .opt.wrong{background:linear-gradient(90deg,#fb7185 0%, #f97316 100%);color:#1b0b07;border-color:rgba(0,0,0,0.12)}
 
-        /* Konten Tengah */
-        .content {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+    .controls{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
+    button{background:var(--accent);border:none;padding:10px 16px;border-radius:10px;color:#022733;font-weight:700;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
 
-        .menu-box {
-            background: rgba(255, 0, 0, 0.1);
-            padding: 40px 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            width: 90%;
-            max-width: 450px;
-            min-height: 280px;
-            animation: fadeIn 0.8s ease-in-out;
-            border: 1px solid red;
-        }
+    .result{display:none;margin-top:18px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
+    .result.show{display:block}
+    .score{font-size:36px;font-weight:800}
+    .sub{color:var(--muted)}
 
-        /* Animasi Ketik-Hapus */
-        .typing {
-            font-size: 20px;
-            font-weight: bold;
-            color: white;
-            border-right: 8px solid white; /* cursor kotak */
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
-            animation: typing 5s steps(23, end) infinite, blinkCursor 0.7s steps(1) infinite;
-        }
+    footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
 
-        @keyframes typing {
-            0% { width: 0ch; }
-            40% { width: 23ch; } /* fix huruf G full */
-            70% { width: 23ch; }
-            100% { width: 0ch; }
-        }
-
-        @keyframes blinkCursor {
-            0% { border-color: white; }
-            50% { border-color: transparent; }
-            100% { border-color: white; }
-        }
-
-        /* Tombol Menu */
-        .menu-btn {
-            display: block;
-            margin: 15px auto;
-            width: 100%;
-            background: red;
-            color: white;
-            padding: 12px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .menu-btn:hover {
-            background: darkred;
-        }
-
-        /* Footer */
-        footer {
-            padding: 15px;
-            background: rgba(255, 0, 0, 0.1);
-            backdrop-filter: blur(8px);
-            font-size: 14px;
-            border-top: 1px solid red;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    @media (max-width:720px){.question{grid-template-columns:1fr} .options{grid-template-columns:1fr} .meta{flex-direction:column;align-items:flex-start}}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="logo">wM</div>
+      <div>
+        <h1>whyuMATEMATIKA</h1>
+        <p class="lead">Latihan perkalian interaktif — 15 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
+      </div>
+    </header>
 
-    <!-- Bar Atas -->
-    <div class="topbar">
-        <span>TOPUP TERMURAH HANYA DI WPTOPUP</span>
-    </div>
-
-    <!-- Konten -->
-    <div class="content">
-        <div class="menu-box">
-            <div class="typing">HALO SAYA WAHYU AGUNG</div>
-            <a class="menu-btn" href="https://www.tiktok.com/@ramgag89" target="_blank">TIKTOK</a>
-            <a class="menu-btn" href="https://www.youtube.com/@yugzy672" target="_blank">YOUTUBE</a>
-            <a class="menu-btn" href="https://wa.me/6287778913867" target="_blank">WHATSAPP</a>
+    <div class="card" id="app">
+      <div class="meta">
+        <div class="chip">Soal: <span id="qIndex">1</span>/15</div>
+        <div class="chip">Benar: <span id="correct">0</span></div>
+        <div class="chip">Salah: <span id="wrong">0</span></div>
+        <div style="flex:1"></div>
+        <div style="width:180px">
+          <div class="progress" aria-hidden><i id="progBar"></i></div>
         </div>
+      </div>
+
+      <div class="question" style="margin-top:12px">
+        <div>
+          <div class="q-text" id="qText">1 × 1 = ?</div>
+          <div class="options" id="options"></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:13px;color:var(--muted)">Tipe: Perkalian</div>
+          <div style="margin-top:18px;font-weight:700;font-size:14px">Progress</div>
+          <div style="margin-top:8px;color:var(--muted);font-size:13px">Jawaban ganda (4 pilihan)</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div>
+          <button class="ghost" id="prevBtn">⟵ Sebelumnya</button>
+          <button class="ghost" id="nextBtn">Berikutnya →</button>
+        </div>
+        <div>
+          <button id="finishBtn">Selesai</button>
+        </div>
+      </div>
+
+      <div class="result" id="resultBox">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="score" id="scoreNum">0</div>
+            <div class="sub">Skor (0–100)</div>
+            <div class="sub" id="scaled">Skor dibulatkan ke puluhan: 0</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:14px;color:var(--muted)">Benar: <strong id="rCorrect">0</strong></div>
+            <div style="font-size:14px;color:var(--muted);margin-top:8px">Salah: <strong id="rWrong">0</strong></div>
+            <div style="margin-top:16px"><button id="restartBtn">Ulangi</button></div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Footer -->
-    <footer>
-        &copy; 2025 WAHYU PROJECT
-    </footer>
+    <footer>Made with ❤️ — whyuMATEMATIKA</footer>
+  </div>
 
+  <script>
+    const TOTAL = 15;
+    let questions = [];
+    let current = 0;
+    let selected = Array(TOTAL).fill(null);
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+
+    function makeQuestion(){
+      const a = randInt(2,12);
+      const b = randInt(2,12);
+      const answer = a*b;
+      const opts = new Set([answer]);
+      while(opts.size<4){
+        const delta = randInt(-12,12);
+        let val = answer + delta;
+        if(val<=0) val = Math.abs(val)+randInt(1,6);
+        opts.add(val);
+      }
+      const arr = Array.from(opts);
+      for(let i=arr.length-1;i>0;i--){const j=randInt(0,i);[arr[i],arr[j]]=[arr[j],arr[i]]}
+      return {a,b,answer,choices:arr};
+    }
+
+    function init(){
+      questions = [];
+      for(let i=0;i<TOTAL;i++) questions.push(makeQuestion());
+      current = 0; selected = Array(TOTAL).fill(null); correctCount=0; wrongCount=0;
+      document.getElementById('resultBox').classList.remove('show');
+      render();
+    }
+
+    function render(){
+      const q = questions[current];
+      document.getElementById('qIndex').textContent = current+1;
+      document.getElementById('correct').textContent = correctCount;
+      document.getElementById('wrong').textContent = wrongCount;
+      document.getElementById('progBar').style.width = ( (current+1)/TOTAL*100) + '%';
+
+      document.getElementById('qText').textContent = `${q.a} × ${q.b} = ?`;
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      q.choices.forEach((ch)=>{
+        const btn = document.createElement('div');
+        btn.className = 'opt';
+        btn.tabIndex = 0;
+        btn.dataset.val = ch;
+        btn.innerHTML = `<div style="font-weight:700">${ch}</div>`;
+        if(selected[current]==ch) btn.classList.add('selected');
+        btn.addEventListener('click', ()=>{
+          selected[current] = ch;
+          if(current < TOTAL-1){
+            current++;
+            render();
+          } else {
+            finishQuiz();
+          }
+        });
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('prevBtn').disabled = current===0;
+      document.getElementById('nextBtn').disabled = current===TOTAL-1;
+    }
+
+    function finishQuiz(){
+      correctCount = 0;
+      wrongCount = 0;
+      for(let i=0;i<TOTAL;i++){
+        if(selected[i]==questions[i].answer) correctCount++;
+        else wrongCount++;
+      }
+      const rawScore = (correctCount / TOTAL) * 100;
+      const score = Math.round(rawScore);
+      const scaledToTens = Math.max(0, Math.round(score/10)*10);
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('rCorrect').textContent = correctCount;
+      document.getElementById('rWrong').textContent = wrongCount;
+      document.getElementById('scaled').textContent = `Skor dibulatkan ke puluhan: ${scaledToTens}`;
+      document.getElementById('resultBox').classList.add('show');
+    }
+
+    document.getElementById('finishBtn').addEventListener('click', ()=>{
+      finishQuiz();
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', ()=>{
+      init();
+    });
+
+    init();
+  </script>
 </body>
 </html>
