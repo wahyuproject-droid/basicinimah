@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>whyuMATEMATIKA - Soal Aritmatika Sulit</title>
+  <title>whyuMATEMATIKA - Soal Matematika Sulit (Akar)</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8}
     *{box-sizing:border-box;font-family:Inter, system-ui, Arial, sans-serif}
@@ -31,6 +31,7 @@
     .result.show{display:block}
     .score{font-size:36px;font-weight:800}
     .sub{color:var(--muted)}
+    .wrong-list{margin-top:16px;font-size:14px;color:#f87171}
     footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
     @media (max-width:720px){.question{grid-template-columns:1fr} .options{grid-template-columns:1fr} .meta{flex-direction:column;align-items:flex-start}}
   </style>
@@ -41,7 +42,8 @@
       <div class="logo">wM</div>
       <div>
         <h1>whyuMATEMATIKA</h1>
-        <p class="lead">Latihan aritmatika tingkat sulit — 30 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
+        <p class="lead">Latihan matematika sangat sulit — 30 soal akar kuadrat/pangkat. Jawab semua soal, hasil ditampilkan di akhir.</p>
+        <p><strong>Nama:</strong> ____________ | <strong>Sekolah:</strong> SMK AN NUR</p>
       </div>
     </header>
 
@@ -58,11 +60,11 @@
 
       <div class="question" style="margin-top:12px">
         <div>
-          <div class="q-text" id="qText">10 + 10 = ?</div>
+          <div class="q-text" id="qText">√144 = ?</div>
           <div class="options" id="options"></div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:13px;color:var(--muted)">Tipe: Aritmatika Sulit</div>
+          <div style="font-size:13px;color:var(--muted)">Tipe: Akar/Pangkat Sulit</div>
           <div style="margin-top:18px;font-weight:700;font-size:14px">Progress</div>
           <div style="margin-top:8px;color:var(--muted);font-size:13px">Jawaban ganda (4 pilihan)</div>
         </div>
@@ -91,6 +93,10 @@
             <div style="margin-top:16px"><button id="restartBtn">Ulangi</button></div>
           </div>
         </div>
+        <div class="wrong-list" id="wrongList"></div>
+        <div style="margin-top:16px">
+          <a id="waLink" target="_blank">📤 Kirim Hasil ke WhatsApp</a>
+        </div>
       </div>
 
     </div>
@@ -108,26 +114,33 @@
 
     function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 
-    // Soal aritmatika sulit: hanya penjumlahan, pengurangan, pembagian
+    // Soal matematika sulit: akar kuadrat dan pangkat
     function makeQuestion(){
-      const ops = ['+','-','÷'];
-      const op = ops[randInt(0,ops.length-1)];
-      let a = randInt(20,100);
-      let b = randInt(2,50);
-      let answer;
-      if(op==='+') answer = a+b;
-      else if(op==='-') answer = a-b;
-      else if(op==='÷'){ answer = Math.floor(a/b); a=answer*b; }
+      const type = randInt(0,1); // 0 = akar, 1 = pangkat
+      let text, answer;
+      if(type===0){
+        let base = randInt(2,30);
+        answer = base;
+        let num = base*base;
+        text = `√${num} = ?`;
+      } else {
+        let base = randInt(2,12);
+        let exp = randInt(2,4);
+        answer = Math.pow(base,exp);
+        text = `${base}<sup>${exp}</sup> = ?`;
+      }
 
       const opts = new Set([answer]);
       while(opts.size<4){
-        let val = answer + randInt(-20,20);
-        if(val<=0) val = Math.abs(val)+randInt(1,50);
+        let delta = randInt(-10,10);
+        if(delta===0) delta=5;
+        let val = answer+delta;
+        if(val<=0) val+=Math.abs(delta)+3;
         opts.add(val);
       }
       const arr = Array.from(opts);
       for(let i=arr.length-1;i>0;i--){const j=randInt(0,i);[arr[i],arr[j]]=[arr[j],arr[i]]}
-      return {a,b,op,answer,choices:arr};
+      return {text,answer,choices:arr};
     }
 
     function init(){
@@ -145,7 +158,7 @@
       document.getElementById('wrong').textContent = wrongCount;
       document.getElementById('progBar').style.width = ( (current+1)/TOTAL*100) + '%';
 
-      document.getElementById('qText').textContent = `${q.a} ${q.op} ${q.b} = ?`;
+      document.getElementById('qText').innerHTML = q.text;
       const optionsDiv = document.getElementById('options');
       optionsDiv.innerHTML = '';
       q.choices.forEach((ch)=>{
@@ -173,9 +186,13 @@
     function finishQuiz(){
       correctCount = 0;
       wrongCount = 0;
+      let wrongDetails = [];
       for(let i=0;i<TOTAL;i++){
         if(selected[i]==questions[i].answer) correctCount++;
-        else wrongCount++;
+        else {
+          wrongCount++;
+          wrongDetails.push(`Soal ${i+1}: Jawaban benar = ${questions[i].answer}, jawaban kamu = ${selected[i]}`);
+        }
       }
       const rawScore = (correctCount / TOTAL) * 100;
       const score = Math.round(rawScore);
@@ -184,6 +201,9 @@
       document.getElementById('rCorrect').textContent = correctCount;
       document.getElementById('rWrong').textContent = wrongCount;
       document.getElementById('scaled').textContent = `Skor dibulatkan ke puluhan: ${scaledToTens}`;
+      document.getElementById('wrongList').innerHTML = wrongDetails.join('<br>');
+      const waText = encodeURIComponent(`Hasil whyuMATEMATIKA%0ANama: ____________%0ASekolah: SMK AN NUR%0ASkor: ${score}%0ABenar: ${correctCount}, Salah: ${wrongCount}`);
+      document.getElementById('waLink').href = `https://wa.me/6287778913867?text=${waText}`;
       document.getElementById('resultBox').classList.add('show');
     }
 
