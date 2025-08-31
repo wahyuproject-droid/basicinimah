@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>whyuMATEMATIKA - Latihan Perkalian</title>
+  <title>whyuMATEMATIKA - Soal Aritmatika Sulit</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8}
     *{box-sizing:border-box;font-family:Inter, system-ui, Arial, sans-serif}
@@ -13,35 +13,25 @@
     .logo{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),#7c3aed);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#022733}
     h1{margin:0;font-size:28px}
     p.lead{margin:6px 0 18px;color:var(--muted)}
-
     .card{background:var(--card);padding:18px;border-radius:12px;margin-top:12px}
     .meta{display:flex;gap:12px;align-items:center}
     .chip{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;font-size:13px;color:var(--muted)}
-
     .progress{height:12px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
     .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#7c3aed);width:0%;transition:width .35s ease}
-
     .question{display:grid;grid-template-columns:1fr 200px;gap:18px;align-items:center}
     .q-text{font-size:20px;font-weight:600}
-
     .options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
     .opt{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid transparent}
     .opt:hover{transform:translateY(-3px)}
     .opt.selected{outline:2px solid rgba(6,182,212,0.12);box-shadow:0 6px 18px rgba(6,182,212,0.06);}
-    .opt.correct{background:linear-gradient(90deg,#0ea5a0 0%, #34d399 100%);color:#022733;border-color:rgba(0,0,0,0.12)}
-    .opt.wrong{background:linear-gradient(90deg,#fb7185 0%, #f97316 100%);color:#1b0b07;border-color:rgba(0,0,0,0.12)}
-
     .controls{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
     button{background:var(--accent);border:none;padding:10px 16px;border-radius:10px;color:#022733;font-weight:700;cursor:pointer}
     button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
-
     .result{display:none;margin-top:18px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
     .result.show{display:block}
     .score{font-size:36px;font-weight:800}
     .sub{color:var(--muted)}
-
     footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
-
     @media (max-width:720px){.question{grid-template-columns:1fr} .options{grid-template-columns:1fr} .meta{flex-direction:column;align-items:flex-start}}
   </style>
 </head>
@@ -51,13 +41,13 @@
       <div class="logo">wM</div>
       <div>
         <h1>whyuMATEMATIKA</h1>
-        <p class="lead">Latihan perkalian interaktif — 15 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
+        <p class="lead">Latihan aritmatika tingkat sulit — 20 soal pilihan ganda. Jawab semua soal, hasil ditampilkan di akhir.</p>
       </div>
     </header>
 
     <div class="card" id="app">
       <div class="meta">
-        <div class="chip">Soal: <span id="qIndex">1</span>/15</div>
+        <div class="chip">Soal: <span id="qIndex">1</span>/20</div>
         <div class="chip">Benar: <span id="correct">0</span></div>
         <div class="chip">Salah: <span id="wrong">0</span></div>
         <div style="flex:1"></div>
@@ -68,11 +58,11 @@
 
       <div class="question" style="margin-top:12px">
         <div>
-          <div class="q-text" id="qText">1 × 1 = ?</div>
+          <div class="q-text" id="qText">10 × 10 = ?</div>
           <div class="options" id="options"></div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:13px;color:var(--muted)">Tipe: Perkalian</div>
+          <div style="font-size:13px;color:var(--muted)">Tipe: Aritmatika Sulit</div>
           <div style="margin-top:18px;font-weight:700;font-size:14px">Progress</div>
           <div style="margin-top:8px;color:var(--muted);font-size:13px">Jawaban ganda (4 pilihan)</div>
         </div>
@@ -109,7 +99,7 @@
   </div>
 
   <script>
-    const TOTAL = 15;
+    const TOTAL = 20;
     let questions = [];
     let current = 0;
     let selected = Array(TOTAL).fill(null);
@@ -118,20 +108,27 @@
 
     function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 
+    // Soal aritmatika sulit: bisa perkalian, penjumlahan, pengurangan, pembagian
     function makeQuestion(){
-      const a = randInt(2,12);
-      const b = randInt(2,12);
-      const answer = a*b;
+      const ops = ['+','-','×','÷'];
+      const op = ops[randInt(0,ops.length-1)];
+      let a = randInt(20,100);
+      let b = randInt(2,50);
+      let answer;
+      if(op==='+') answer = a+b;
+      else if(op==='-') answer = a-b;
+      else if(op==='×') answer = a*b;
+      else if(op==='÷'){ answer = Math.floor(a/b); a=answer*b; }
+
       const opts = new Set([answer]);
       while(opts.size<4){
-        const delta = randInt(-12,12);
-        let val = answer + delta;
-        if(val<=0) val = Math.abs(val)+randInt(1,6);
+        let val = answer + randInt(-20,20);
+        if(val<=0) val = Math.abs(val)+randInt(1,50);
         opts.add(val);
       }
       const arr = Array.from(opts);
       for(let i=arr.length-1;i>0;i--){const j=randInt(0,i);[arr[i],arr[j]]=[arr[j],arr[i]]}
-      return {a,b,answer,choices:arr};
+      return {a,b,op,answer,choices:arr};
     }
 
     function init(){
@@ -149,7 +146,7 @@
       document.getElementById('wrong').textContent = wrongCount;
       document.getElementById('progBar').style.width = ( (current+1)/TOTAL*100) + '%';
 
-      document.getElementById('qText').textContent = `${q.a} × ${q.b} = ?`;
+      document.getElementById('qText').textContent = `${q.a} ${q.op} ${q.b} = ?`;
       const optionsDiv = document.getElementById('options');
       optionsDiv.innerHTML = '';
       q.choices.forEach((ch)=>{
